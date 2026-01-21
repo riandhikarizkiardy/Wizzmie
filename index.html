@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wizzmie Food App - Pesan Mie Favoritmu</title>
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="font/bootstrap-icons.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/aos.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <style>
+        /* Custom CSS untuk perbaikan tampilan */
+        :root {
+            --primary-color: #FF6B35;
+            --secondary-color: #FFA500;
+            --dark-color: #1A1A1A;
+            --light-color: #FFF9F0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding-top: 76px; /* Untuk mengkompensasi navbar fixed */
+        }
+        
+        /* Navbar */
+        #main-navbar {
+            background-color: rgba(255, 255, 255, 0.95) !important;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        #main-navbar.scrolled {
+            padding-top: 5px;
+            padding-bottom: 5px;
+            background-color: white !important;
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            color: var(--primary-color) !important;
+            font-size: 1.8rem;
+        }
+        
+        .nav-link {
+            font-weight: 500;
+            color: var(--dark-color) !important;
+            transition: color 0.3s;
+            position: relative;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            color: var(--primary-color) !important;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 3px;
+            background: var(--primary-color);
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            transition: width 0.3s;
+        }
+        
+        .nav-link:hover::after, .nav-link.active::after {
+            width: 80%;
+        }
+        
+        /* Showcase */
+        #showcase {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                        url('img/mie.jpg') center/cover no-repeat;
+            min-height: 90vh;
+            display: flex;
+            align-items: center;
+        }
+        
+        .dark-overlay {
+            background: rgba(0, 0, 0, 0.5);
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+        }
+        
+        #showcase h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+        }
+        
+        #showcase strong {
+            color: var(--secondary-color);
+        }
+        
+        #showcase .lead {
+            font-size: 1.3rem;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+        }
+        
+        /* CTA Button */
+        .btn-wizzmie {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            border: none;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+        }
+        
+        .btn-wizzmie:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
+            color: white;
+        }
+        
+        /* Sections umum */
+        section {
+            padding: 80px 0;
+        }
+        
+        h2 {
+            color: var(--dark-color);
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        h2::after {
+            content: '';
+            position: absolute;
+            width: 60px;
+            height: 4px;
+            background: var(--primary-color);
+            bottom: 0;
+            left: 0;
+        }
+        
+        /* Showoff sections */
+        #showoff-1, #showoff-2 {
+            padding: 100px 0;
+        }
+        
+        #showoff-1 .lead, #showoff-2 .lead {
+            color: var(--primary-color);
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+        
+        .img-fluid {
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            transition: transform 0.5s;
+        }
+        
+        .img-fluid:hover {
+            transform: scale(1.02);
+        }
+        
+        /* Product Section */
+        #product {
+            background-color: var(--light-color);
+        }
+        
+        #product h1, #team h1, #blog h1 {
+            color: var(--dark-color);
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+        
+        #product hr, #team hr, #blog hr {
+            height: 4px;
+            background: var(--primary-color);
+            opacity: 1;
+            margin: 0 auto 2rem;
+            width: 100px !important;
+        }
+        
+        .product-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s;
+            height: 100%;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .product-card img {
+            height: 200px;
+            width: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+        
+        .product-card:hover img {
+            transform: scale(1.05);
+        }
+        
+        .product-card h4 {
+            color: var(--primary-color);
+            font-weight: 700;
+            margin: 1rem 0 0.5rem;
+        }
+        
+        .product-card p {
+            color: #666;
+            font-size: 0.95rem;
+            padding: 0 1rem 1.5rem;
+        }
+        
+        /* Team/Testimoni */
+        #team {
+            background: white;
+        }
+        
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s;
+            overflow: hidden;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card-body {
+            padding: 2rem;
+        }
+        
+        .card h5 {
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+        
+        .card .text-muted {
+            color: #888 !important;
+        }
+        
+        .bi-star-fill {
+            font-size: 1.2rem;
+        }
+        
+        /* Blog/Promo */
+        #blog {
+            background-color: var(--light-color);
+        }
+        
+        .blog-card {
+            border: none;
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            height: 100%;
+        }
+        
+        .blog-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .blog-card img {
+            height: 250px;
+            width: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+        
+        .blog-card:hover img {
+            transform: scale(1.05);
+        }
+        
+        .blog-card .card-body {
+            padding: 1.5rem;
+        }
+        
+        .blog-card h5 {
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+        
+        /* Footer */
+        footer {
+            background: linear-gradient(to right, var(--dark-color), #333);
+            padding: 60px 0 30px !important;
+        }
+        
+        footer h5 {
+            color: white;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            font-size: 1.8rem;
+        }
+        
+        footer p {
+            color: #ccc;
+            max-width: 500px;
+            margin: 0 auto 2rem;
+        }
+        
+        footer small {
+            color: #aaa;
+        }
+        
+        /* Back to Top Button */
+        #backToTop {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--primary-color);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+            box-shadow: 0 3px 10px rgba(255, 107, 53, 0.5);
+        }
+        
+        #backToTop.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        #backToTop:hover {
+            background: var(--secondary-color);
+            transform: translateY(-3px);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            #showcase h1 {
+                font-size: 2.5rem;
+            }
+            
+            section {
+                padding: 60px 0;
+            }
+            
+            h2 {
+                font-size: 1.8rem;
+            }
+            
+            .blog-card img {
+                height: 200px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            #showcase h1 {
+                font-size: 2rem;
+            }
+            
+            #showcase .lead {
+                font-size: 1.1rem;
+            }
+            
+            .nav-link {
+                padding: 10px 0 !important;
+            }
+            
+            .blog-card img {
+                height: 180px;
+            }
+        }
+    </style>
+</head>
+<body data-bs-spy="scroll" data-bs-target="#navbarNav" data-bs-offset="200">
+
+<!-- NAVBAR -->
+<nav id="main-navbar" class="navbar navbar-expand-lg bg-light navbar-light fixed-top py-2 py-lg-3">
+    <div class="container">
+        <a href="index.html" class="navbar-brand">
+            <i class="bi bi-fire me-2"></i>Wizzmie App
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a href="#showcase" class="nav-link p-3 active">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#product" class="nav-link p-3">Menu</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#showoff-1" class="nav-link p-3">Keunggulan</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#team" class="nav-link p-3">Testimoni</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#blog" class="nav-link p-3">Promo</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- SHOWCASE -->
+<section id="showcase" class="py-5">
+    <div class="dark-overlay">
+        <div class="container">
+            <div class="row">
+                <div class="col text-center text-white" data-aos="fade-up">
+                    <h1 class="display-2">Wizzmie <strong>Food App</strong></h1>
+                    <p class="lead">
+                        Aplikasi pemesanan Wizzmie yang modern, cepat, praktis, dan mudah digunakan untuk semua kalangan. Pesan makanan favoritmu kapan saja, di mana saja!
+                    </p>
+                    <div class="mt-4">
+                        <a href="#product" class="btn btn-wizzmie">Lihat Menu</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SHOWOFF 1 -->
+<section id="showoff-1" class="bg-light text-muted py-5" data-aos="fade-right">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <img src="img/Menu-Wizzmie-Mie-Goyang.jpg" class="img-fluid mb-3 mb-md-0" alt="Mie Goyang Wizzmie">
+            </div>
+            <div class="col-md-6">
+                <h2>Rasa Juara</h2>
+                <p class="lead">
+                    Setiap porsi Wizzmie diracik dengan bumbu pilihan yang menghasilkan rasa nikmat dan konsisten di setiap gigitan.
+                </p>
+                <p>
+                    Mulai dari level pedas ringan hingga ekstrem, semua bisa disesuaikan dengan selera. Cocok untuk nongkrong bareng teman atau keluarga. Dibuat dengan bahan segar dan proses yang higienis untuk menjaga kualitas terbaik.
+                </p>
+                <div class="mt-4">
+                    <span class="badge bg-primary me-2 p-2">Level Pedas Bisa Disesuaikan</span>
+                    <span class="badge bg-primary me-2 p-2">Bumbu Rahasia</span>
+                    <span class="badge bg-primary p-2">Bahan Premium</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SHOWOFF 2 -->
+<section id="showoff-2" class="bg-white text-muted py-5" data-aos="fade-left">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-6 order-2 order-md-1">
+                <h2>Harga Bersahabat</h2>
+                <p class="lead">
+                    Nikmati menu lezat dengan harga yang ramah di kantong tanpa mengurangi kualitas rasa.
+                </p>
+                <p>
+                    Wizzmie menjadi pilihan favorit anak muda karena porsinya pas, harganya terjangkau, dan rasanya selalu memuaskan. Kami percaya bahwa makanan enak tidak harus mahal.
+                </p>
+                <div class="mt-4">
+                    <div class="d-flex align-items-center mb-2">
+                        <i class="bi bi-check-circle-fill text-success me-2"></i>
+                        <span>Harga mulai dari Rp 15.000</span>
+                    </div>
+                    <div class="d-flex align-items-center mb-2">
+                        <i class="bi bi-check-circle-fill text-success me-2"></i>
+                        <span>Promo mingguan & diskon khusus member</span>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-check-circle-fill text-success me-2"></i>
+                        <span>Paket hemat untuk kelompok</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 order-1 order-md-2 mb-4 mb-md-0">
+                <img src="img/wizmiee.jpg" class="img-fluid" alt="Wizzmie Paket Hemat">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- PRODUCT -->
+<section id="product" class="py-5 bg-light" data-aos="fade-up">
+    <div class="container">
+        <div class="row">
+            <div class="col text-center">
+                <h1>Menu Favorit</h1>
+                <hr class="w-25 mx-auto">
+                <p class="lead">
+                    Pilihan menu terbaik yang siap memanjakan lidahmu. Semua dibuat dengan bahan pilihan dan resep rahasia.
+                </p>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+
+            <div class="col-sm-6 col-md-3 p-3">
+                <div class="product-card">
+                    <img src="img/SnapInsta.to_613083664_18037680848757276_5312986264098145823_n.jpg" class="img-fluid" alt="Wizz Chicken">
+                    <div class="text-center p-3">
+                        <h4>Wizz Chicken</h4>
+                        <p>Pilih Paket Rock biar makin hemat dan komplit karena udah dapet ayam + nasi. Biar makannya makin nikmat, jangan lupa tambah Sambal Horeg 😋🔥</p>
+                        <span class="badge bg-warning text-dark">Rp 25.000</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6 col-md-3 p-3">
+                <div class="product-card">
+                    <img src="img/SnapInsta.to_587199224_18032166152757276_1215916361649348286_n.jpg" class="img-fluid" alt="Matcha Wizzmie">
+                    <div class="text-center p-3">
+                        <h4>Japanese Matcha</h4>
+                        <p>Matcha-matcha apa yang menyedihkan? Matcha kamu belum cobain Japanese Series di Wizzmie sih~.</p>
+                        <span class="badge bg-warning text-dark">Rp 18.000</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6 col-md-3 p-3">
+                <div class="product-card">
+                    <img src="img/SnapInsta.to_528582176_736908779053244_1741315209766087133_n.jpg" class="img-fluid" alt="RiceBall Wizzmie">
+                    <div class="text-center p-3">
+                        <h4>RiceBall Special</h4>
+                        <p>Riceball ayam dengan saus spesial Wizzmie. Cocok untuk camilan atau teman makan mie.</p>
+                        <span class="badge bg-warning text-dark">Rp 15.000</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6 col-md-3 p-3">
+                <div class="product-card">
+                    <img src="img/SnapInsta.to_526302636_732113016199487_4773708481397654472_n.jpg" class="img-fluid" alt="Minuman Wizzmie">
+                    <div class="text-center p-3">
+                        <h4>Coconut Series</h4>
+                        <p>Minuman segar dengan Coconut Milk berkualitas. Tersedia dalam 3 varian rasa yang menyegarkan.</p>
+                        <span class="badge bg-warning text-dark">Rp 20.000</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        
+        <div class="row mt-5">
+            <div class="col text-center">
+                <a href="#blog" class="btn btn-wizzmie">Lihat Semua Menu & Promo</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- TEAM / TESTIMONI -->
+<section id="team" class="py-5 text-center">
+    <div class="container">
+        <div class="row mb-5">
+            <div class="col">
+                <h1 class="pb-3">Apa Kata Mereka?</h1>
+                <hr class="w-25 mx-auto">
+                <p class="lead">
+                    Ribuan pelanggan puas dengan rasa dan pelayanan Wizzmie.
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+
+            <div class="col-md-4" data-aos="flip-down">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <i class="bi bi-person-circle" style="font-size: 3rem; color: var(--primary-color);"></i>
+                        </div>
+                        <h5>Akbar</h5>
+                        <p class="text-muted">Pelajar</p>
+
+                        <!-- RATING -->
+                        <div class="mb-2 text-warning">
+                            <i class="bi-star-fill"></i>
+                            <i class="bi-star-fill"></i>
+                            <i class="bi-star-fill"></i>
+                            <i class="bi-star-fill"></i>
+                            <i class="bi-star-fill"></i>
+                        </div>
+
+                        <p class="fst-italic">
+                            "Mie Goyangnya nagih banget, bikin ketagihan! Level pedasnya pas, cocok buat yang suka pedas tapi nggak terlalu ekstrem."
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4" data-aos="flip-down" data-aos-delay="100">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <i class="bi bi-person-circle" style="font-size: 3rem; color: var(--primary-color);"></i>
+                        </div>
+                        <h5>Ariqq</h5>
+                        <p class="text-muted">Pelajar</p>
+
+                        <!-- RATING -->
+                        <div class="mb-2 text-warning">
+                            <i class="bi-star-fill"></i>
+                            <i class="bi-star-fill"></i>
+                            <i class="bi-star-fill"></i>
+                            <i class="bi-star-fill"></i>
+                            <i class="bi-star-half"></i>
+                        </div>
+
+                        <p class="fst-italic">
+                            "Pelayanan cepat dan rasanya selalu konsisten. Wizz Chicken favorit saya, ayamnya juicy dan bumbunya meresap."
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4" data-aos="flip-down" data-aos-delay="200">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <i class="bi bi-person-circle" style="font-size: 3rem; color: var(--primary-color);"></i>
+                        </div>
+                        <h5>Sabrina</h5>
+                        <p class="text-muted">Pelajar</p>
+
+                        <!-- RATING -->
+                        <div class="mb-2 text-warning">
+                            <i class="bi-star-fill"></i>
+                            <i class="bi-star-fill"></i>
+                            <i class="bi-star-fill"></i>
+                            <i class="bi-star-fill"></i>
+                            <i class="bi-star"></i>
+                        </div>
+
+                        <p class="fst-italic">
+                            "Salah satu mie terenak dengan harga terbaik. Japanese Matchanya juga enak banget, nggak terlalu manis dan matchanya terasa banget."
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+<!-- BLOG / PROMO -->
+<section id="blog" class="p-5 bg-light text-dark">
+    <div class="container">
+        <div class="row">
+            <div class="col text-center">
+                <h1>Promo & Update</h1>
+                <hr class="w-25 mx-auto">
+                <p class="lead">
+                    Info promo terbaru dan event seru dari Wizzmie.
+                </p>
+            </div>
+        </div>
+
+        <div class="row row-cols-1 row-cols-md-3 g-4 mt-3">
+            <div class="col" data-aos="fade-up">
+                <div class="blog-card">
+                    <img src="img/SnapInsta.to_526302636_732113016199487_4773708481397654472_n.jpg" class="card-img-top" alt="Promo Spesial">
+                    <div class="card-body">
+                        <span class="badge bg-danger mb-2">HOT PROMO</span>
+                        <h5 class="card-title">Promo Spesial</h5>
+                        <p class="card-text">Kapan lagi makan Wizzmie cuma bayar Rp 1000 aja? Yuk serbu promo hemat Wizzmie di seluruh outlet Wizzmie🔥.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col" data-aos="fade-up" data-aos-delay="100">
+                <div class="blog-card">
+                    <img src="img/SnapInsta.to_588579815_17842895637631211_19244636530468906_n.jpg" class="card-img-top" alt="Fun Run Wizzmie">
+                    <div class="card-body">
+                        <span class="badge bg-success mb-2">EVENT</span>
+                        <h5 class="card-title">Fun Run Wizzmie 2026</h5>
+                        <p class="card-text">Ayo melangkah bersama Wizzmie Probolinggo dalam event GEBYAR AWAL TAHUN - FUN RUN WIZZMIE 2026.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col" data-aos="fade-up" data-aos-delay="200">
+                <div class="blog-card">
+                    <img src="img/SnapInsta.to_610524708_18037158923757276_5560010796999103645_n.jpg" class="card-img-top" alt="Take Away">
+                    <div class="card-body">
+                        <span class="badge bg-info mb-2">NEWS</span>
+                        <h5 class="card-title">Kini Bisa Take Away</h5>
+                        <p class="card-text">Siap nemenin lapar kamu di mana aja! Wizzchicken sekarang sudah bisa TAKE AWAY dan pesan lewat GoFood, GrabFood, atau ShopeeFood.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row mt-5">
+            <div class="col text-center">
+                <div class="alert alert-warning" role="alert">
+                    <h4 class="alert-heading">Ingin info promo terbaru?</h4>
+                    <p>Dapatkan notifikasi promo terbaru langsung di handphonemu dengan follow media sosial Wizzmie!</p>
+                    <hr>
+                    <div class="social-icons">
+                        <a href="#" class="text-dark me-3"><i class="bi bi-instagram" style="font-size: 1.5rem;"></i></a>
+                        <a href="#" class="text-dark me-3"><i class="bi bi-facebook" style="font-size: 1.5rem;"></i></a>
+                        <a href="#" class="text-dark me-3"><i class="bi bi-tiktok" style="font-size: 1.5rem;"></i></a>
+                        <a href="#" class="text-dark"><i class="bi bi-twitter" style="font-size: 1.5rem;"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="text-white text-center bg-dark py-5">
+    <div class="container">
+        <h5><i class="bi bi-fire me-2"></i>Wizzmie Food App</h5>
+        <p>Mie Nikmat • Harga Bersahabat • Favorit Semua Kalangan</p>
+        
+        <div class="row mt-4">
+            <div class="col-md-4 mb-3">
+                <h6>Kontak Kami</h6>
+                <p class="mb-1"><i class="bi bi-telephone me-2"></i> (0335) 123456</p>
+                <p><i class="bi bi-envelope me-2"></i> info@wizzmie.com</p>
+            </div>
+            <div class="col-md-4 mb-3">
+                <h6>Lokasi</h6>
+                <p>Jl. Raya Probolinggo No. 123<br>Probolinggo, Jawa Timur</p>
+            </div>
+            <div class="col-md-4 mb-3">
+                <h6>Jam Operasional</h6>
+                <p class="mb-1">Setiap Hari: 10.00 - 22.00 WIB</p>
+                <p>Drive-thru: 10.00 - 23.00 WIB</p>
+            </div>
+        </div>
+        
+        <hr class="my-4" style="border-color: #555;">
+        
+        <small>&copy; 2026 Wizzmie Food App. All rights reserved.</small>
+    </div>
+</footer>
+
+<!-- Back to Top Button -->
+<div id="backToTop">
+    <i class="bi bi-chevron-up"></i>
+</div>
+
+<script src="js/bootstrap.bundle.js"></script>
+<script src="js/aos.js"></script>
+<script>    
+    // Inisialisasi AOS
+    AOS.init({
+        once: true,
+        duration: 800,
+        offset: 100
+    });
+    
+    // Navbar scroll effect
+    window.addEventListener('scroll', function() {
+        const navbar = document.getElementById('main-navbar');
+        const backToTop = document.getElementById('backToTop');
+        
+        if (window.scrollY > 100) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+        
+        // Show/hide back to top button
+        if (window.scrollY > 300) {
+            backToTop.classList.add('active');
+        } else {
+            backToTop.classList.remove('active');
+        }
+    });
+    
+    // Back to top functionality
+    document.getElementById('backToTop').addEventListener('click', function() {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+    
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const targetId = this.getAttribute('href');
+            if (targetId === '#') return;
+            
+            const targetElement = document.querySelector(targetId);
+            if (targetElement) {
+                window.scrollTo({
+                    top: targetElement.offsetTop - 80,
+                    behavior: 'smooth'
+                });
+                
+                // Update active nav link
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    link.classList.remove('active');
+                });
+                this.classList.add('active');
+            }
+        });
+    });
+    
+    // Nav link active state on scroll
+    window.addEventListener('scroll', function() {
+        const sections = document.querySelectorAll('section');
+        const navLinks = document.querySelectorAll('.nav-link');
+        
+        let current = '';
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            const sectionHeight = section.clientHeight;
+            if (scrollY >= (sectionTop - 150)) {
+                current = section.getAttribute('id');
+            }
+        });
+        
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === `#${current}`) {
+                link.classList.add('active');
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
